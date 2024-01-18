@@ -1,8 +1,12 @@
-export type Thought = {
-  id: string;
-  text: string;
-};
+import { randomID } from '../Utils'
 
-export const newThought = (text: string): Thought => {
-  return { id: crypto.randomUUID(), text: text };
-};
+export type Thought = {
+  id: string
+  text: string
+  dateCreated: Date
+  dateModified?: Date
+}
+
+export const newThought = (): Thought => {
+  return { id: randomID(), text: '', dateCreated: new Date() }
+}
