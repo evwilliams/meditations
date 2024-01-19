@@ -28,14 +28,21 @@ const ThoughtPad = ({ thought, onUpdate, ...rest }: ThoughtPadProps) => {
   }
 
   return (
-    <textarea
-      id='thought-pad'
-      ref={textareaRef}
-      className={rest.className}
-      placeholder="What's on your mind?"
-      value={thought.text}
-      onChange={(e) => thought.id && onUpdate(thought.id, e.target.value)}
-    />
+    <div className={`${rest.className} flex flex-col gap-4 items-center`}>
+      <textarea
+        id='thought-pad'
+        ref={textareaRef}
+        className="w-full grow resize-none text-2xl focus:outline-none"
+        placeholder="What's on your mind?"
+        value={thought.text}
+        onChange={(e) => thought.id && onUpdate(thought.id, e.target.value)}
+      />
+      <div className='grow-0 gap-4 flex flex-row'>
+        <button className='border px-4 py-1 rounded-sm text-neutral-400'>Remember Later</button>
+        <button className='border px-4 py-1 rounded-sm text-neutral-400'>Remember Soon</button>
+      </div>
+    </div>
+
   )
 }
 

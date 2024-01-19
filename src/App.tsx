@@ -50,7 +50,7 @@ function App() {
     ),
     write: (
       activeThought ? <ThoughtPad
-        className="w-full resize-none text-2xl focus:outline-none"
+        className="w-full"
         thought={activeThought}
         onUpdate={updateThought}
       /> : <Welcome />
@@ -60,11 +60,11 @@ function App() {
 
   return (
     <div className="App flex h-dvh w-full flex-col items-center align-top font-serif text-neutral-800">
-      <div className="Content flex h-full w-full grow p-8 lg:px-96">
+      <div className="Content flex h-full w-full grow pt-8 pb-4 px-8 lg:px-96">
         {tabs[activeTab]}
       </div>
 
-      <div className="Buttons flex flex-row items-center justify-center gap-16 py-2 lg:py-16">
+      <div className="Buttons flex flex-row items-center justify-center gap-16 py-4 lg:pb-12">
         <ListIcon
           className="h-6 w-6 text-neutral-400"
           onClick={() => tabPressed('list')}
