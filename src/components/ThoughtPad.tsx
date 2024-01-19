@@ -7,11 +7,12 @@ type RememberHandler = (id: number, when: RememberWhen) => void
 
 type ThoughtPadProps = {
   thought: Thought
+  showRememberButtons: boolean
   onUpdate: UpdateHandler
   onRemember: RememberHandler
 } & React.HTMLAttributes<HTMLTextAreaElement>
 
-const ThoughtPad = ({ thought, onUpdate, onRemember, ...rest }: ThoughtPadProps) => {
+const ThoughtPad = ({ thought, showRememberButtons, onUpdate, onRemember, ...rest }: ThoughtPadProps) => {
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -40,14 +41,14 @@ const ThoughtPad = ({ thought, onUpdate, onRemember, ...rest }: ThoughtPadProps)
         value={thought.text}
         onChange={(e) => thought.id && onUpdate(thought.id, e.target.value)}
       />
-      <div className='grow-0 gap-4 flex flex-row'>
+      {showRememberButtons && <div className='grow-0 gap-4 flex flex-row'>
         <button
           className='text-sm border px-4 py-1 rounded-sm text-neutral-400'
           onClick={() => thought.id && onRemember(thought.id, 'later')}>Remember Later</button>
         <button
           className='text-sm border px-4 py-1 rounded-sm text-neutral-400'
           onClick={() => thought.id && onRemember(thought.id, 'soon')}>Remember Soon</button>
-      </div>
+      </div>}
     </div>
 
   )

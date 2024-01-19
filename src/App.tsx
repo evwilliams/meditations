@@ -56,6 +56,7 @@ function App() {
       activeThought ? <ThoughtPad
         className="w-full"
         thought={activeThought}
+        showRememberButtons={sortedThoughts.length > 6}
         onUpdate={updateThought}
         onRemember={rememberPressed}
       /> : <Welcome />
