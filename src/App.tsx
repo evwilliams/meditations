@@ -60,7 +60,7 @@ function App() {
 
   return (
     <div className="App flex h-dvh w-full flex-col items-center align-top font-serif text-neutral-800">
-      <div className="Content flex h-full w-full grow pt-8 pb-4 px-8 lg:px-96">
+      <div className="Content flex h-full w-full grow pt-8 pb-2 px-8 lg:px-96">
         {tabs[activeTab]}
       </div>
 
