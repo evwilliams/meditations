@@ -5,7 +5,7 @@ import { download } from '../Utils'
 type SettingsProps = {} & React.HTMLAttributes<HTMLDivElement>
 
 const SettingsList = ({ ...rest }: SettingsProps) => {
-  const { thoughts } = useThoughts()
+  const { sortedThoughts } = useThoughts()
 
   return (
     <div {...rest}>
@@ -15,7 +15,7 @@ const SettingsList = ({ ...rest }: SettingsProps) => {
         <li key="export">
           <button
             className="flex flex-row items-center gap-2"
-            onClick={() => download(thoughts, 'meditations.json')}
+            onClick={() => download(sortedThoughts, 'meditations.json')}
           >
             <span className="grow">Export thoughts as json</span>
             <DownloadIcon className="h-6 w-6" />
