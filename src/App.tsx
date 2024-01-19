@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { CogIcon, ListIcon, PlusIcon } from './components/Icons'
 import { Thought } from './data/Thought'
 import SettingsList from './components/SettingsList'
+import Welcome from './components/Welcome'
 
 type TabKey = 'list' | 'write' | 'settings'
 
@@ -48,11 +49,11 @@ function App() {
       />
     ),
     write: (
-      activeThought && <ThoughtPad
+      activeThought ? <ThoughtPad
         className="w-full resize-none text-2xl focus:outline-none"
         thought={activeThought}
         onUpdate={updateThought}
-      />
+      /> : <Welcome />
     ),
     settings: <SettingsList className="w-full" />,
   }

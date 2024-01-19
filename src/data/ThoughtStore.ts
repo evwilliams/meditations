@@ -1,5 +1,5 @@
 import { Thought, newThought } from './Thought'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { db } from './Db'
 import { useLiveQuery } from 'dexie-react-hooks'
 
@@ -8,6 +8,12 @@ export const useThoughts = () => {
     db.thoughts.orderBy('sortValue').reverse().toArray()
   )
   const [activeThought, setActiveThought] = useState<Thought>()
+
+  useEffect(() => {
+    if (sortedThoughts && sortedThoughts?.length > 0 && !activeThought) {
+      setActiveThought(sortedThoughts[0])
+    }
+  }, [sortedThoughts])
 
   const createThought = async () => {
     const newId = await db.thoughts.add(newThought())
