@@ -20,3 +20,7 @@ export const download = (data: any, filename: string) => {
   anchorEl.click()
   URL.revokeObjectURL(jsonObjectUrl)
 }
+
+export const clampFloor = function (value: number, min: number, max: number) {
+  return Math.floor(Math.min(Math.max(value, min), max))
+}

@@ -2,6 +2,9 @@ import { Thought, newThought } from './Thought'
 import { useEffect, useState } from 'react'
 import { db } from './Db'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { clampFloor } from '../Utils'
+
+export type RememberWhen = 'soon' | 'later'
 
 export const useThoughts = () => {
   const sortedThoughts = useLiveQuery(() =>
@@ -10,7 +13,11 @@ export const useThoughts = () => {
   const [activeThought, setActiveThought] = useState<Thought>()
 
   useEffect(() => {
-    if (sortedThoughts && sortedThoughts?.length > 0 && !activeThought) {
+    if (
+      sortedThoughts &&
+      sortedThoughts.length > 0 &&
+      (!activeThought || activeThought != sortedThoughts[0])
+    ) {
       setActiveThought(sortedThoughts[0])
     }
   }, [sortedThoughts])
@@ -42,6 +49,31 @@ export const useThoughts = () => {
       })
   }
 
+  const soonIndex = (length: number) => {
+    return length * 0.15 + (length / 2) * Math.random()
+  }
+
+  const laterIndex = (length: number) => {
+    const middle = length / 2
+    return middle + length * Math.random()
+  }
+
+  const rememberThought = async (thoughtId: number, when: RememberWhen) => {
+    if (!sortedThoughts || sortedThoughts.length < 2) return
+
+    const index = clampFloor(
+      when === 'soon'
+        ? soonIndex(sortedThoughts.length)
+        : laterIndex(sortedThoughts.length),
+      0,
+      sortedThoughts.length - 1
+    )
+    const newSortValue = sortedThoughts[index].sortValue - 1
+    await db.thoughts.update(thoughtId, {
+      sortValue: newSortValue,
+    })
+  }
+
   const clearThought = (t: Thought) => {
     if (activeThought && activeThought.id === t.id) {
       setActiveThought(undefined)
@@ -56,5 +88,6 @@ export const useThoughts = () => {
     updateThought,
     focusThought,
     clearThought,
+    rememberThought,
   }
 }

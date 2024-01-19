@@ -1,14 +1,17 @@
 import { useEffect, useRef } from 'react'
 import { Thought } from '../data/Thought'
+import { RememberWhen } from '../data/ThoughtStore'
 
 type UpdateHandler = (id: number, text: string) => void
+type RememberHandler = (id: number, when: RememberWhen) => void
 
 type ThoughtPadProps = {
   thought: Thought
   onUpdate: UpdateHandler
+  onRemember: RememberHandler
 } & React.HTMLAttributes<HTMLTextAreaElement>
 
-const ThoughtPad = ({ thought, onUpdate, ...rest }: ThoughtPadProps) => {
+const ThoughtPad = ({ thought, onUpdate, onRemember, ...rest }: ThoughtPadProps) => {
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -38,8 +41,12 @@ const ThoughtPad = ({ thought, onUpdate, ...rest }: ThoughtPadProps) => {
         onChange={(e) => thought.id && onUpdate(thought.id, e.target.value)}
       />
       <div className='grow-0 gap-4 flex flex-row'>
-        <button className='text-sm border px-4 py-1 rounded-sm text-neutral-400'>Remember Later</button>
-        <button className='text-sm border px-4 py-1 rounded-sm text-neutral-400'>Remember Soon</button>
+        <button
+          className='text-sm border px-4 py-1 rounded-sm text-neutral-400'
+          onClick={() => thought.id && onRemember(thought.id, 'later')}>Remember Later</button>
+        <button
+          className='text-sm border px-4 py-1 rounded-sm text-neutral-400'
+          onClick={() => thought.id && onRemember(thought.id, 'soon')}>Remember Soon</button>
       </div>
     </div>
 

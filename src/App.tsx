@@ -1,4 +1,4 @@
-import { useThoughts } from './data/ThoughtStore'
+import { RememberWhen, useThoughts } from './data/ThoughtStore'
 import ThoughtList from './components/ThoughtList'
 import ThoughtPad from './components/ThoughtPad'
 import { useState } from 'react'
@@ -16,7 +16,8 @@ function App() {
     createThought,
     updateThought,
     focusThought,
-    clearThought
+    clearThought,
+    rememberThought,
   } = useThoughts()
 
   const [activeTab, setActiveTab] = useState<TabKey>('write')
@@ -31,12 +32,14 @@ function App() {
     setActiveTab('write')
   }
 
-
   const selectThought = (t: Thought) => {
     focusThought(t)
     setActiveTab('write')
   }
 
+  const rememberPressed = async (thoughtId: number, when: RememberWhen) => {
+    await rememberThought(thoughtId, when)
+  }
 
   if (!sortedThoughts) return null
 
@@ -54,6 +57,7 @@ function App() {
         className="w-full"
         thought={activeThought}
         onUpdate={updateThought}
+        onRemember={rememberPressed}
       /> : <Welcome />
     ),
     settings: <SettingsList className="w-full" />,
