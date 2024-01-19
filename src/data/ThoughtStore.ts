@@ -43,6 +43,9 @@ export const useThoughts = () => {
   }
 
   const clearThought = (t: Thought) => {
+    if (activeThought && activeThought.id === t.id) {
+      setActiveThought(undefined)
+    }
     t.id && db.thoughts.delete(t.id)
   }
 
