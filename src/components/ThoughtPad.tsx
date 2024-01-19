@@ -22,7 +22,7 @@ const ThoughtPad = ({ thought, onUpdate, ...rest }: ThoughtPadProps) => {
   }, [thought])
 
   const focusTextArea = () => {
-    if (!textareaRef.current || !window.isMobileDevice()) return
+    if (!textareaRef.current || window.isMobileDevice()) return
     textareaRef.current.focus()
     textareaRef.current.selectionStart = textareaRef.current.selectionEnd = thought.text.length;
   }
