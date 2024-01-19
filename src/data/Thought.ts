@@ -1,12 +1,16 @@
-import { randomID } from '../Utils'
-
 export type Thought = {
-  id: string
+  id?: number
   text: string
   dateCreated: Date
   dateModified?: Date
+  sortValue: number
 }
 
 export const newThought = (): Thought => {
-  return { id: randomID(), text: '', dateCreated: new Date() }
+  return {
+    text: '',
+    dateCreated: new Date(),
+    dateModified: new Date(),
+    sortValue: Date.now(),
+  }
 }

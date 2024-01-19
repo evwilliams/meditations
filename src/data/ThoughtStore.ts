@@ -1,72 +1,57 @@
 import { Thought, newThought } from './Thought'
-import { useEffect, useReducer } from 'react'
-
-const storageKey = 'thoughts'
-
-type Action =
-  | { type: 'create' }
-  | { type: 'update'; thought: Thought }
-  | { type: 'clear'; id: string }
-  | { type: 'focus'; thought: Thought }
-
-const reducer = (thoughts: Thought[], action: Action) => {
-  switch (action.type) {
-    case 'create': {
-      return [newThought(), ...thoughts]
-    }
-    case 'update': {
-      return thoughts.map((t) =>
-        t.id === action.thought.id ? action.thought : t
-      )
-    }
-    case 'clear': {
-      return thoughts.filter((t) => t.id !== action.id)
-    }
-    case 'focus': {
-      return [
-        action.thought,
-        ...thoughts.filter((t) => t.id !== action.thought.id),
-      ]
-    }
-  }
-}
-
-const loadThoughts = (storageKey: string) => {
-  const existingThoughts = localStorage.getItem(storageKey)
-  return existingThoughts ? JSON.parse(existingThoughts) : [newThought()]
-}
-
-const storeThoughts = (thoughts: Thought[]) => {
-  localStorage.setItem(storageKey, JSON.stringify(thoughts))
-}
+import { useEffect, useState } from 'react'
+import { db } from './Db'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 export const useThoughts = () => {
-  const [thoughts, dispatch] = useReducer(reducer, loadThoughts(storageKey))
+  const sortedThoughts = useLiveQuery(() =>
+    db.thoughts.orderBy('sortValue').reverse().toArray()
+  )
+  const [activeThought, setActiveThought] = useState<Thought>()
 
   useEffect(() => {
-    storeThoughts(thoughts)
-  }, [thoughts])
+    setActiveThought(activeThought)
+  }, [])
 
-  const newThought = () => {
-    dispatch({ type: 'create' })
+  useEffect(() => {
+    setActiveThought(activeThought)
+  }, [activeThought])
+
+  const createThought = async () => {
+    const newId = await db.thoughts.add(newThought())
+    const thought = await db.thoughts.get(newId)
+    setActiveThought(thought)
   }
 
-  const updateThought = (thought: Thought) => {
-    thought.dateModified = new Date()
-    dispatch({ type: 'update', thought: thought })
+  const updateThought = (id: number, text: string) => {
+    const changes = {
+      text,
+      dateModified: new Date(),
+      sortValue: Date.now(),
+    }
+
+    if (activeThought && activeThought.id === id) {
+      setActiveThought({ ...activeThought, ...changes })
+    }
+    db.thoughts.update(id, changes)
   }
 
-  const focusThought = (thought: Thought) => {
-    dispatch({ type: 'focus', thought: thought })
+  const focusThought = (t: Thought) => {
+    setActiveThought(t)
+    t.id &&
+      db.thoughts.update(t.id, {
+        sortValue: Date.now(),
+      })
   }
 
-  const clearThought = (id: string) => {
-    dispatch({ type: 'clear', id: id })
+  const clearThought = (t: Thought) => {
+    t.id && db.thoughts.delete(t.id)
   }
 
   return {
-    thoughts,
-    newThought,
+    activeThought,
+    sortedThoughts,
+    createThought,
     updateThought,
     focusThought,
     clearThought,

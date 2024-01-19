@@ -9,8 +9,14 @@ import SettingsList from './components/SettingsList'
 type TabKey = 'list' | 'write' | 'settings'
 
 function App() {
-  const { thoughts, newThought, updateThought, focusThought, clearThought } =
-    useThoughts()
+  const {
+    activeThought,
+    sortedThoughts,
+    createThought,
+    updateThought,
+    focusThought,
+    clearThought
+  } = useThoughts()
 
   const [activeTab, setActiveTab] = useState<TabKey>('write')
 
@@ -18,29 +24,33 @@ function App() {
     setActiveTab(tabKey === activeTab ? 'write' : tabKey)
   }
 
+  const plusPressed = async () => {
+    await createThought()
+    setActiveTab('write')
+  }
+
+
   const selectThought = (t: Thought) => {
     focusThought(t)
     setActiveTab('write')
   }
 
-  const createThought = () => {
-    newThought()
-    setActiveTab('write')
-  }
+
+  if (!sortedThoughts) return null
 
   const tabs = {
     list: (
       <ThoughtList
         className="w-full"
-        thoughts={thoughts}
+        thoughts={sortedThoughts}
         selectionHandler={selectThought}
         onDeleteClicked={clearThought}
       />
     ),
     write: (
-      <ThoughtPad
+      activeThought && <ThoughtPad
         className="w-full resize-none text-2xl focus:outline-none"
-        thought={thoughts[0]}
+        thought={activeThought}
         onUpdate={updateThought}
       />
     ),
@@ -60,7 +70,7 @@ function App() {
         />
         <PlusIcon
           className="h-12 w-12 text-neutral-800"
-          onClick={createThought}
+          onClick={plusPressed}
         />
         <CogIcon
           className="h-6 w-6 text-neutral-400"
