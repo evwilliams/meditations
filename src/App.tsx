@@ -26,7 +26,8 @@ function App() {
   }
 
   const plusPressed = async () => {
-    await createThought()
+    if (!activeThought || activeThought.text.length > 0)
+      await createThought()
     setActiveTab('write')
   }
 
