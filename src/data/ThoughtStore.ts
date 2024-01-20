@@ -74,11 +74,15 @@ export const useThoughts = () => {
     })
   }
 
-  const clearThought = (t: Thought) => {
+  const clearThought = async (t: Thought) => {
     if (activeThought && activeThought.id === t.id) {
       setActiveThought(undefined)
     }
-    t.id && db.thoughts.delete(t.id)
+    return t.id && db.thoughts.delete(t.id)
+  }
+
+  const countThoughts = () => {
+    return db.thoughts.count()
   }
 
   return {
@@ -89,5 +93,6 @@ export const useThoughts = () => {
     focusThought,
     clearThought,
     rememberThought,
+    countThoughts,
   }
 }

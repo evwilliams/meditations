@@ -18,6 +18,7 @@ function App() {
     focusThought,
     clearThought,
     rememberThought,
+    countThoughts
   } = useThoughts()
 
   const [activeTab, setActiveTab] = useState<TabKey>('write')
@@ -26,8 +27,16 @@ function App() {
     setActiveTab(tabKey === activeTab ? 'write' : tabKey)
   }
 
+  const hasMultipleNotes = () => {
+    if (!sortedThoughts || !activeThought)
+      return false
+    return sortedThoughts.length > 1 || activeThought.text.length > 0
+  }
+
+  const emptyActiveThought = () => !activeThought || activeThought.text.length > 0
+
   const plusPressed = async () => {
-    if (!activeThought || activeThought.text.length > 0)
+    if (emptyActiveThought())
       await createThought()
     setActiveTab('write')
   }
@@ -35,6 +44,13 @@ function App() {
   const selectThought = (t: Thought) => {
     focusThought(t)
     setActiveTab('write')
+  }
+
+  const deletePressed = async (t: Thought) => {
+    await clearThought(t)
+    const numThoughts = await countThoughts()
+    if (numThoughts < 1)
+      setActiveTab('write')
   }
 
   const rememberPressed = async (thoughtId: number, when: RememberWhen) => {
@@ -49,7 +65,7 @@ function App() {
         className="w-full"
         thoughts={sortedThoughts}
         selectionHandler={selectThought}
-        onDeleteClicked={clearThought}
+        onDeleteClicked={deletePressed}
       />
     ),
     write: (
@@ -71,18 +87,18 @@ function App() {
       </div>
 
       <div className="Buttons flex flex-row items-center justify-center gap-16 py-4 lg:pb-12">
-        <ListIcon
+        {hasMultipleNotes() && <ListIcon
           className="h-6 w-6 text-neutral-400"
           onClick={() => tabPressed('list')}
-        />
+        />}
         <PlusIcon
           className="h-12 w-12 text-neutral-800"
           onClick={plusPressed}
         />
-        <CogIcon
+        {hasMultipleNotes() && <CogIcon
           className="h-6 w-6 text-neutral-400"
           onClick={() => tabPressed('settings')}
-        />
+        />}
       </div>
     </div>
   )
