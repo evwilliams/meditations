@@ -11,14 +11,15 @@ export const useThoughts = () => {
     db.thoughts.orderBy('sortValue').reverse().toArray()
   )
   const [activeThought, setActiveThought] = useState<Thought>()
+  const [firstLoad, setFirstLoad] = useState<boolean>(true)
 
   useEffect(() => {
     if (
-      sortedThoughts &&
-      sortedThoughts.length > 0 &&
-      (!activeThought || activeThought != sortedThoughts[0])
+      sortedThoughts?.length &&
+      (!activeThought || activeThought !== sortedThoughts[0])
     ) {
-      setActiveThought(sortedThoughts[0])
+      firstLoad ? focusRecentThought() : setActiveThought(sortedThoughts[0])
+      setFirstLoad(false)
     }
   }, [sortedThoughts])
 
@@ -47,6 +48,14 @@ export const useThoughts = () => {
       db.thoughts.update(t.id, {
         sortValue: Date.now(),
       })
+  }
+
+  const focusRecentThought = () => {
+    if (!sortedThoughts?.length) return
+
+    // Get a thought from the first 40% of thoughts
+    const index = Math.floor(0.4 * sortedThoughts.length)
+    focusThought(sortedThoughts[index])
   }
 
   const soonIndex = (length: number) => {
