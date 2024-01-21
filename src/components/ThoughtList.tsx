@@ -17,7 +17,8 @@ const ThoughtList = ({
   ...rest
 }: ThoughtListProps) => {
   return (
-    <div {...rest}>
+    <div {...rest} className={`${rest.className} relative`}>
+      <div className="pointer-events-none absolute -inset-4 z-10 bg-gradient-to-t from-white from-5% dark:from-neutral-800" />
       <header className="text-2xl italic">Meditations</header>
       <ul className="space-y-2 py-4 text-sm md:text-lg">
         {thoughts?.map((thought) => (

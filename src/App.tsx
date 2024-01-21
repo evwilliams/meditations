@@ -83,8 +83,8 @@ function App() {
   }
 
   return (
-    <div className="App flex h-dvh w-full flex-col items-center bg-neutral-50 align-top font-serif text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
-      <div className="Content flex h-full w-full grow px-8 pb-2 pt-8 lg:px-96">
+    <div className="App flex h-dvh w-full flex-col items-center align-top font-serif text-neutral-800 dark:text-neutral-200">
+      <div className="Content flex h-full w-full grow overflow-hidden px-8 pb-2 pt-8 lg:px-96">
         {tabs[activeTab]}
       </div>
 
@@ -96,7 +96,7 @@ function App() {
           />
         )}
         <PlusIcon
-          className="h-12 w-12 text-neutral-800 dark:text-neutral-200"
+          className="h-12 w-12"
           onClick={plusPressed}
         />
         {hasMultipleNotes() && (
