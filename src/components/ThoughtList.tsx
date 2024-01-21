@@ -16,7 +16,6 @@ const ThoughtList = ({
   onDeleteClicked,
   ...rest
 }: ThoughtListProps) => {
-
   return (
     <div {...rest}>
       <header className="text-2xl italic">Meditations</header>

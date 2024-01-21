@@ -18,7 +18,7 @@ function App() {
     focusThought,
     clearThought,
     rememberThought,
-    countThoughts
+    countThoughts,
   } = useThoughts()
 
   const [activeTab, setActiveTab] = useState<TabKey>('write')
@@ -28,16 +28,15 @@ function App() {
   }
 
   const hasMultipleNotes = () => {
-    if (!sortedThoughts || !activeThought)
-      return false
+    if (!sortedThoughts || !activeThought) return false
     return sortedThoughts.length > 1 || activeThought.text.length > 0
   }
 
-  const emptyActiveThought = () => !activeThought || activeThought.text.length > 0
+  const emptyActiveThought = () =>
+    !activeThought || activeThought.text.length > 0
 
   const plusPressed = async () => {
-    if (emptyActiveThought())
-      await createThought()
+    if (emptyActiveThought()) await createThought()
     setActiveTab('write')
   }
 
@@ -49,8 +48,7 @@ function App() {
   const deletePressed = async (t: Thought) => {
     await clearThought(t)
     const numThoughts = await countThoughts()
-    if (numThoughts < 1)
-      setActiveTab('write')
+    if (numThoughts < 1) setActiveTab('write')
   }
 
   const rememberPressed = async (thoughtId: number, when: RememberWhen) => {
@@ -68,37 +66,45 @@ function App() {
         onDeleteClicked={deletePressed}
       />
     ),
-    write: (
-      activeThought ? <ThoughtPad
+    write: activeThought ? (
+      <ThoughtPad
         className="w-full"
         thought={activeThought}
-        showRememberButtons={sortedThoughts.length > 6 && activeThought.text.length > 0}
+        showRememberButtons={
+          sortedThoughts.length > 6 && activeThought.text.length > 0
+        }
         onUpdate={updateThought}
         onRemember={rememberPressed}
-      /> : <Welcome />
+      />
+    ) : (
+      <Welcome />
     ),
     settings: <SettingsList className="w-full" />,
   }
 
   return (
-    <div className="App flex h-dvh w-full flex-col items-center align-top font-serif text-neutral-800 bg-neutral-50 dark:bg-neutral-800 dark:text-neutral-200">
-      <div className="Content flex h-full w-full grow pt-8 pb-2 px-8 lg:px-96">
+    <div className="App flex h-dvh w-full flex-col items-center bg-neutral-50 align-top font-serif text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
+      <div className="Content flex h-full w-full grow px-8 pb-2 pt-8 lg:px-96">
         {tabs[activeTab]}
       </div>
 
       <div className="Buttons flex flex-row items-center justify-center gap-16 py-4 lg:pb-12">
-        {hasMultipleNotes() && <ListIcon
-          className="h-6 w-6 text-neutral-400"
-          onClick={() => tabPressed('list')}
-        />}
+        {hasMultipleNotes() && (
+          <ListIcon
+            className="h-6 w-6 text-neutral-400"
+            onClick={() => tabPressed('list')}
+          />
+        )}
         <PlusIcon
           className="h-12 w-12 text-neutral-800 dark:text-neutral-200"
           onClick={plusPressed}
         />
-        {hasMultipleNotes() && <CogIcon
-          className="h-6 w-6 text-neutral-400"
-          onClick={() => tabPressed('settings')}
-        />}
+        {hasMultipleNotes() && (
+          <CogIcon
+            className="h-6 w-6 text-neutral-400"
+            onClick={() => tabPressed('settings')}
+          />
+        )}
       </div>
     </div>
   )
