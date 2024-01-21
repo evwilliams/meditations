@@ -81,7 +81,7 @@ function App() {
   }
 
   return (
-    <div className="App flex h-dvh w-full flex-col items-center align-top font-serif text-neutral-800">
+    <div className="App flex h-dvh w-full flex-col items-center align-top font-serif text-neutral-800 bg-neutral-50 dark:bg-neutral-800 dark:text-neutral-200">
       <div className="Content flex h-full w-full grow pt-8 pb-2 px-8 lg:px-96">
         {tabs[activeTab]}
       </div>
@@ -92,7 +92,7 @@ function App() {
           onClick={() => tabPressed('list')}
         />}
         <PlusIcon
-          className="h-12 w-12 text-neutral-800"
+          className="h-12 w-12 text-neutral-800 dark:text-neutral-200"
           onClick={plusPressed}
         />
         {hasMultipleNotes() && <CogIcon

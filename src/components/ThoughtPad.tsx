@@ -36,17 +36,17 @@ const ThoughtPad = ({ thought, showRememberButtons, onUpdate, onRemember, ...res
       <textarea
         id='thought-pad'
         ref={textareaRef}
-        className="w-full grow resize-none text-2xl focus:outline-none"
+        className="w-full grow resize-none text-2xl focus:outline-none bg-transparent"
         placeholder="What's on your mind?"
         value={thought.text}
         onChange={(e) => thought.id && onUpdate(thought.id, e.target.value)}
       />
       {showRememberButtons && <div className='grow-0 gap-4 flex flex-row'>
         <button
-          className='text-sm border px-4 py-1 rounded-sm text-neutral-400'
+          className='text-sm border px-4 py-1 rounded-sm text-neutral-400 border-neutral-400'
           onClick={() => thought.id && onRemember(thought.id, 'later')}>Remember Later</button>
         <button
-          className='text-sm border px-4 py-1 rounded-sm text-neutral-400'
+          className='text-sm border px-4 py-1 rounded-sm text-neutral-400 border-neutral-400'
           onClick={() => thought.id && onRemember(thought.id, 'soon')}>Remember Soon</button>
       </div>}
     </div>
